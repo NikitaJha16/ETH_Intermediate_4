@@ -46,9 +46,7 @@ To use this contract, you need to have the following prerequisites:
 Clone this repository and install the dependencies:
 
 ```bash
-git clone https://github.com/yourusername/degen-token.git
-cd degen-token
-npm install
+git clone https://github.com/NikitaJha16/ETH_Intermediate_4/tree/main
 ```
 
 ## Deployment
