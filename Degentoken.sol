@@ -9,6 +9,8 @@ contract DegenToken is ERC20, Ownable, ERC20Burnable
 {
     mapping(address => uint256) private _rewards;
     mapping(string => uint256) private _itemCosts;  // Mapping to store item costs
+    mapping(address => mapping(string => uint256)) private _playerItems; // Mapping to track player inventory
+    mapping(address => mapping(string => bool)) private _hasRedeemed; // Mapping to track if a player has redeemed a specific item
 
     constructor() ERC20("Degen", "DGN") Ownable(msg.sender) 
     {
@@ -71,8 +73,26 @@ contract DegenToken is ERC20, Ownable, ERC20Burnable
         uint256 cost = _itemCosts[itemName];
         require(cost > 0, "Item does not exist");
         require(balanceOf(msg.sender) >= cost, "Insufficient balance to redeem");
+        require(!_hasRedeemed[msg.sender][itemName], "Item already redeemed");
 
         _burn(msg.sender, cost);
 
+        // Add item to player's inventory
+        _playerItems[msg.sender][itemName] += 1;
+
+        // Mark item as redeemed
+        _hasRedeemed[msg.sender][itemName] = true;
+    }
+
+    // Function to check if a player has redeemed an item
+    function hasRedeemed(address player, string calldata itemName) external view returns (bool) 
+    {
+        return _hasRedeemed[player][itemName];
+    }
+
+    // Function to check player's inventory
+    function checkInventory(address player, string calldata itemName) external view returns (uint256) 
+    {
+        return _playerItems[player][itemName];
     }
 }
